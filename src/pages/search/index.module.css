@@ -1,0 +1,10 @@
+.img_container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.img_container img {
+  width: calc(100% / 3 - 10px);
+}

@@ -1,0 +1,15 @@
+.img_container,
+.img_container2 {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.img_container img {
+  width: calc(100% / 3 - 10px);
+}
+
+.img_container2 img {
+  width: calc(100% / 5 - 10px);
+}
