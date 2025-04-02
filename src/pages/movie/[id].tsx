@@ -1,6 +1,8 @@
 import style from "./[id].module.css";
 import { GetStaticPropsContext, InferGetStaticPropsType } from "next";
 import fetchOneMovie from "@/lib/fetch-one-movie";
+import Head from "next/head";
+import { useRouter } from "next/router";
 
 export const getStaticPaths = async () => {
   return {
@@ -38,29 +40,57 @@ export const getStaticProps = async (context: GetStaticPropsContext) => {
 export default function Page({
   movie,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
-  // const router = useRouter();
-  // const id = router.query.id;
-  if (!movie) return <>찾을 수 없습니다.</>;
+  const router = useRouter();
+
+  if (router.isFallback) {
+    <Head>
+      <title>한입시네마</title>
+      <meta property="og:image" content="/thumbnail.png" />
+      <meta property="og:title" content="한입시네마" />
+      <meta
+        property="og:description"
+        content="지금 바로 한입시네마에서 다양한 영화를 즐기세요!"
+      />
+    </Head>;
+  }
+  if (!movie) return <>문제가 발생했습니다. 다시 시도하세요.</>;
+  const {
+    id,
+    title,
+    subTitle,
+    description,
+    releaseDate,
+    genres,
+    company,
+    posterImgUrl,
+    runtime,
+  } = movie;
   return (
     <>
-      <div className={style.img_container}>
+      <Head>
+        <title>{title}</title>
+        <meta property="og:image" content="/thumbnail.png" />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+      </Head>
+      <div className={style.img_container} key={id}>
         <div
           className={style.cover_img_container}
-          style={{ backgroundImage: `url('${movie.posterImgUrl}')` }}
+          style={{ backgroundImage: `url('${posterImgUrl}')` }}
         >
-          <img src={movie.posterImgUrl} alt={movie.title} />
+          <img src={posterImgUrl} alt={title} />
         </div>
 
-        <h2>{movie.title}</h2>
+        <h2>{title}</h2>
         <p>
-          {movie.releaseDate} / {movie.genres.join(", ")} /{movie.runtime}분
+          {releaseDate} / {genres.join(", ")} /{runtime}분
         </p>
 
-        <p>{movie.company}</p>
+        <p>{company}</p>
 
-        <p style={{ fontWeight: "bold" }}>{movie.subTitle}</p>
+        <p style={{ fontWeight: "bold" }}>{subTitle}</p>
 
-        <p>{movie.description}</p>
+        <p>{description}</p>
       </div>
     </>
   );

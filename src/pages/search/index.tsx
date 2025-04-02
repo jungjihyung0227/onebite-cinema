@@ -8,22 +8,7 @@ import fetchMovies from "@/lib/fetch-movies";
 import { useEffect, useState } from "react";
 import { MovieData } from "@/types";
 import { useRouter } from "next/router";
-
-export const getStaticPaths = async () => {
-  return {
-    paths: [
-      { params: { id: "1" } }, // 반드시 id는 문자열로 들어감
-      { params: { id: "2" } },
-      { params: { id: "3" } },
-    ],
-    fallback: true, // false로 설정하면 없는 id로 접근할 경우 404 에러 페이지로 이동함.
-    /**
-     * false : 404 Not found
-     * blocking: SSR 방식
-     * true : SSR 방식 + 데이터가 없는 콜백 상태의 페이지부터 반환
-     */
-  };
-};
+import Head from "next/head";
 
 export default function Page() {
   const [movies, setMovies] = useState<MovieData[]>([]);
@@ -42,11 +27,22 @@ export default function Page() {
   }, [q]);
 
   return (
-    <div className={style.img_container}>
-      {movies.map((movie) => (
-        <MovieItem key={movie.id} data={movie} />
-      ))}
-    </div>
+    <>
+      <Head>
+        <title>한입시네마</title>
+        <meta property="og:image" content="/thumbnail.png" />
+        <meta property="og:title" content="한입시네마 - 검색결과" />
+        <meta
+          property="og:description"
+          content="지금 바로 한입시네마에서 다양한 영화를 즐기세요!"
+        />
+      </Head>
+      <div className={style.img_container}>
+        {movies.map((movie) => (
+          <MovieItem key={movie.id} data={movie} />
+        ))}
+      </div>
+    </>
   );
 }
 
